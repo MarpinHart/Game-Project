@@ -35,6 +35,8 @@ var controller = {
 };
 
 var loop = function() {
+  console.log("y",rectangle.y)
+  console.log("x",rectangle.x)
   //Controller with physics
 
   if (controller.up && rectangle.jumping == false) {
@@ -56,8 +58,21 @@ var loop = function() {
   rectangle.yVelocity *= 0.9; //Let's it slow down when we take up the key
 
   if (rectangle.y > 480 - 32) {
-    rectangle.jumping = false; //So we can jump again
+    rectangle.jumping = false; //So we can't jump again
     rectangle.y = 480 - 32; //Bottom of the screen
+    rectangle.yVelocity = 0; //Once you hit the wall velocity goes to 0
+  }
+  // GETS ON TOP OF THE FIRST floor
+  if ((rectangle.y > 300 - 32 && rectangle.y < 300-28) && rectangle.x < 279 ) {
+    rectangle.jumping = false; //So we can't jump again
+    rectangle.y = 300 - 32; //Bottom of the platform
+    rectangle.yVelocity = 0; //Once you hit the wall velocity goes to 0
+    
+  }
+  //GETS ON TOP OF THE SECOND
+  if ((rectangle.y > 150 - 32 && rectangle.y < 180-28)  && rectangle.x > 318) {
+    rectangle.jumping = false; //So we can't jump again
+    rectangle.y = 150 - 32; //Bottom of the screen
     rectangle.yVelocity = 0; //Once you hit the wall velocity goes to 0
   }
 
@@ -67,6 +82,7 @@ var loop = function() {
   } else if (rectangle.x > 640) {
     rectangle.x = -32;
   }
+  // background
   ctx.fillStyle = "white";
   ctx.fillRect(0,0, 640, 480)
   ctx.fillStyle = "#ff0000";
@@ -74,6 +90,11 @@ var loop = function() {
   ctx.rect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
   ctx.fill();
 
+  const level1 =
+  {
+    y:480,
+    x:700
+  }
   ctx.strokeStyle = "#202830";
   ctx.lineWidth = 4;
   ctx.beginPath();
@@ -84,7 +105,7 @@ var loop = function() {
   ctx.strokeStyle = "#202830";
   ctx.lineWidth = 4;
   ctx.beginPath();
-  ctx.moveTo(400, 150);
+  ctx.moveTo(350, 150);
   ctx.lineTo(640, 150);
   ctx.stroke();
   window.requestAnimationFrame(loop);
