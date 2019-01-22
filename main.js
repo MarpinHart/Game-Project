@@ -16,6 +16,7 @@ var controller = {
   left: false,
   right: false,
   up: false,
+  //shoot:false,
 
   keyListener: function(event) {
     //Key state returned to check event type and stops from moving
@@ -30,6 +31,9 @@ var controller = {
       case 39: //Right key
         controller.right = keyState;
         break;
+      /* case 32:
+        controller.shoot = keyState;
+        break; */
     }
   }
 };
@@ -38,6 +42,9 @@ var controller = {
 var loop = function() {
   console.log("y", rectangle.y);
   console.log("x", rectangle.x);
+  console.log("xvelocity", rectangle.xVelocity);
+  console.log("yvelocity", rectangle.yVelocity);
+
   //Controller with physics
 
   if (controller.up && rectangle.jumping == false) {
@@ -176,6 +183,8 @@ var loop = function() {
   ctx.lineTo(570, 420);
   ctx.lineTo(720, 420);
   ctx.stroke();
+
+  ctx.strokeRect(rectangle.x+ 10, rectangle.y+10, 2, 2 )
   window.requestAnimationFrame(loop);
 };
 
