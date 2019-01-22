@@ -5,7 +5,7 @@ var rectangle = {
   height: 32,
   jumping: true,
   width: 32,
-  x: 304, //Center the canvas
+  x: 344, //Center the canvas
   xVelocity: 0,
   y: 0,
   yVelocity: 0 //Speed of the square
@@ -34,13 +34,14 @@ var controller = {
   }
 };
 
+
 var loop = function() {
-  console.log("y",rectangle.y)
-  console.log("x",rectangle.x)
+  console.log("y", rectangle.y);
+  console.log("x", rectangle.x);
   //Controller with physics
 
   if (controller.up && rectangle.jumping == false) {
-    rectangle.yVelocity -= 40; //Send the rectangle shooting upwards
+    rectangle.yVelocity -= 38; //Send the rectangle shooting upwards
     rectangle.jumping = true; //So that doesn't jump again when is in the air
   }
   if (controller.left) {
@@ -56,57 +57,124 @@ var loop = function() {
   rectangle.y += rectangle.yVelocity;
   rectangle.xVelocity *= 0.9; //Simulates friction reducing the velocity
   rectangle.yVelocity *= 0.9; //Let's it slow down when we take up the key
-
+  // Resets if drops into the pit
   if (rectangle.y > 480 - 32) {
-    rectangle.jumping = false; //So we can't jump again
-    rectangle.y = 480 - 32; //Bottom of the screen
+    setTimeout(function(){
+      rectangle.jumping = false; //So we can jump again
+    rectangle.x = 344
+    rectangle.y = 0; //Bottom of the screen
     rectangle.yVelocity = 0; //Once you hit the wall velocity goes to 0
-  }
-  // GETS ON TOP OF THE FIRST floor
-  if ((rectangle.y > 300 - 32 && rectangle.y < 300-28) && rectangle.x < 279 ) {
-    rectangle.jumping = false; //So we can't jump again
-    rectangle.y = 300 - 32; //Bottom of the platform
-    rectangle.yVelocity = 0; //Once you hit the wall velocity goes to 0
+    }, 500)
     
   }
-  //GETS ON TOP OF THE SECOND
-  if ((rectangle.y > 150 - 32 && rectangle.y < 180-28)  && rectangle.x > 318) {
-    rectangle.jumping = false; //So we can't jump again
-    rectangle.y = 150 - 32; //Bottom of the screen
+  // GETS ON TOP OF THE FIRST floor
+  if (
+    rectangle.y > 250 - 32 &&
+    rectangle.y < 250 - 28 &&
+    (rectangle.x > 110 -32 && rectangle.x < 609)
+  ) {
+    rectangle.jumping = false; //So we can jump again
+    rectangle.y = 250 - 32; //Bottom of the platform
     rectangle.yVelocity = 0; //Once you hit the wall velocity goes to 0
   }
+  // Gets on top of the bottom left corner
+  if (
+    rectangle.y > 420 - 32 &&
+    rectangle.y < 430 - 28 &&
+    rectangle.x < 140 -5
+  ) {
+    rectangle.jumping = false; //So we can jump again
+    rectangle.y = 420 - 32; //Bottom of the platform
+    rectangle.yVelocity = 0; //Once you hit the wall velocity goes to 0
+  }
+  if (
+    rectangle.x < 139 &&
+    rectangle.y > 420 -32
+  ) {
+    rectangle.x = 140
+  }
 
+  if (
+    rectangle.y > 460 - 32 &&
+    rectangle.y < 470 - 28 &&
+    rectangle.x > 140 - 32 &&
+    rectangle.x < 300
+  ) {
+    rectangle.jumping = false; //So we can jump again
+    rectangle.y = 460 - 32; //Bottom of the platform
+    rectangle.yVelocity = 0; //Once you hit the wall velocity goes to 0
+  }
+  // Gets on top of the bottom right corner
+ 
+  if (
+    rectangle.y > 420 - 32 &&
+    rectangle.y < 430 - 28 &&
+    rectangle.x > 570 -32
+  ) {
+    rectangle.jumping = false; //So we can jump again
+    rectangle.y = 420 - 32; //Bottom of the platform
+    rectangle.yVelocity = 0; //Once you hit the wall velocity goes to 0
+  }
+  if (
+    rectangle.x > 567 - 32 &&
+    rectangle.y > 420 -32
+  ) {
+    rectangle.x = 567-32
+  }
+
+  if (
+    rectangle.y > 460 - 32 &&
+    rectangle.y < 470 - 28 &&
+    rectangle.x > 410 -32 &&
+    rectangle.x < 570
+  ) {
+    rectangle.jumping = false; //So we can jump again
+    rectangle.y = 460 - 32; //Bottom of the platform
+    rectangle.yVelocity = 0; //Once you hit the wall velocity goes to 0
+  }
+  
   if (rectangle.x < -32) {
     //From left corner to right
-    rectangle.x = 640;
-  } else if (rectangle.x > 640) {
+    rectangle.x = 720;
+  } else if (rectangle.x > 720) {
     rectangle.x = -32;
   }
   // background
   ctx.fillStyle = "white";
-  ctx.fillRect(0,0, 640, 480)
+  ctx.fillRect(0, 0, 720, 480);
   ctx.fillStyle = "#ff0000";
   ctx.beginPath();
   ctx.rect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
   ctx.fill();
 
-  const level1 =
+  /* const level1 =
   {
     y:480,
     x:700
-  }
-  ctx.strokeStyle = "#202830";
-  ctx.lineWidth = 4;
-  ctx.beginPath();
-  ctx.moveTo(0, 300);
-  ctx.lineTo(280, 300);
-  ctx.stroke();
+  } */
 
+  //TOP FLOOR
   ctx.strokeStyle = "#202830";
   ctx.lineWidth = 4;
   ctx.beginPath();
-  ctx.moveTo(350, 150);
-  ctx.lineTo(640, 150);
+  ctx.moveTo(110, 250);
+  ctx.lineTo(610, 250);
+  ctx.stroke();
+  // BOTTOM LEFT CORNER
+  ctx.beginPath();
+  ctx.moveTo(0, 420);
+  ctx.lineTo(140, 420);
+  ctx.lineTo(140, 460);
+  ctx.lineTo(300, 460);
+  ctx.lineTo(300, 480);
+  ctx.stroke();
+  // BOTTOM RIGHT CORNER
+  ctx.beginPath();
+  ctx.moveTo(410, 480);
+  ctx.lineTo(410, 460);
+  ctx.lineTo(570, 460);
+  ctx.lineTo(570, 420);
+  ctx.lineTo(720, 420);
   ctx.stroke();
   window.requestAnimationFrame(loop);
 };
