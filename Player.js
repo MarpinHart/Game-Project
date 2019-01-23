@@ -8,6 +8,8 @@ class Player {
     this.yVelocity = 0
     this.jumping = true
     this.color = color
+    this.direction = "right"
+    this.life = 3
   }
   movingPhysics() {
     this.yVelocity += 1.5; //Simulates gravity so that rectangle falls
@@ -16,32 +18,9 @@ class Player {
     this.xVelocity *= 0.9; //Simulates friction reducing the velocity
     this.yVelocity *= 0.9; //Let's it slow down when we take up the key
   }
+  draw(ctx) {
+    ctx.fillStyle = this.color;
+    ctx.fillRect(this.x, this.y, this.width, this.height);
   }
 
-
-/* if (
-  rectangle.y > 420 - 32 &&
-  rectangle.y < 430 - 28 &&
-  rectangle.x > 570 -32 
-
-  rectangle.x < 140 -5
-) {
-  rectangle.jumping = false; //So we can jump again
-  rectangle.y = 420 - 32; //Bottom of the platform
-  rectangle.yVelocity = 0; //Once you hit the wall velocity goes to 0
 }
-
-if (
-  rectangle.y > 460 - 32 &&
-  rectangle.y < 470 - 28 &&
-  rectangle.x > 410 -32 &&
-  rectangle.x < 570
-
-  rectangle.x > 140 - 32 &&
-  rectangle.x < 300
-) {
-  rectangle.jumping = false; //So we can jump again
-  rectangle.y = 460 - 32; //Bottom of the platform
-  rectangle.yVelocity = 0; //Once you hit the wall velocity goes to 0
-}
- */
