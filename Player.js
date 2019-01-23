@@ -12,6 +12,8 @@ class Player {
     this.life = 3
   }
   movingPhysics() {
+    this.formerX = this.x
+    this.formerY = this.y
     this.yVelocity += 1.5; //Simulates gravity so that rectangle falls
     this.x += this.xVelocity; //Add xy velocity to the current position
     this.y += this.yVelocity;

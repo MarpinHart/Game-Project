@@ -3,6 +3,11 @@ var ctx = canvas.getContext("2d");
 
 var rectangle = new Player(344, 0, 32, 32, "#ff0000"/* "#ff0000" */);
 var playerShots = [];
+var frame = 0
+
+
+var enemies = []
+
 var controller = {
   //Keep track of the state of the key pressed
   left: false,
@@ -33,7 +38,7 @@ var controller = {
     }
   }
 };
-var enemy = new Enemy("../images/enemy.png", 344, 0, 32, 32);
+var enemy = new Enemy(344, 0, 32, 32);
 /* var enemiesArray = []
 const createEnemies = () => {
   enemiesArray.push(enemy)
@@ -51,14 +56,14 @@ const createBullets = () => {
     canvas.height,
     getPlayerPosY,
     getPlayerPosX,
-    "../images/bullet.png"
+    "images/bullet.png"
   );
   var bullet2 = new Bullets(
     canvas.width,
     canvas.height,
     getPlayerPosY,
     getPlayerPosX,
-    "../images/bulletLeft.png"
+    "images/bulletLeft.png"
   );
   if(rectangle.direction == "left" || rectangle.color === "blue")
     bulletArray2.push(bullet2);
@@ -66,13 +71,12 @@ const createBullets = () => {
     bulletArray.push(bullet);
 };
 
+
+
 // END of bullets
 
-function updateEverything() {}
-function drawEverything() {}
-
-var loop = function() {
-  
+function updateEverything() {
+  frame++
 
   // PLAYER MOVEMENT
 
@@ -100,8 +104,46 @@ var loop = function() {
     }, 500);
   }
 
-  collisionDetection(rectangle);
+  // Creation of potentiel new enemy based of enemies data
+  var newEnemyData = enemiesData.find((enemyData) => enemyData.frameApparation === frame)
+  if (newEnemyData) {
+    enemies.push(new Enemy(newEnemyData.x, newEnemyData.y, 32, 32, newEnemyData.direction))
+  }
+  for (let i = 0; i < enemies.length; i++) {
+    enemies[i].move()
+    enemies[i].gravityPhysics()
+    collisionDetection(enemies[i]);
+  }
 
+
+  enemy.move()
+  enemy.gravityPhysics()
+
+  collisionDetection(rectangle);
+  collisionDetection(enemy);
+
+
+  // Resets the enemy at the center
+  if (enemy.y > 480 - 32) {
+    enemy.x = 344;
+    enemy.y = 40; //Bottom of the screen
+    enemy.vy = 0; //Once you hit the wall velocity goes to 0
+  }
+
+  
+
+
+
+  // ------- ENEMY GRAVITY
+  /* setTimeout(function(){
+    createEnemies()
+  }, 1000)
+  enemiesArray.forEach(enemy => enemy.draw(ctx));
+  enemiesArray.forEach(enemy => enemy.move(ctx));
+  enemiesArray.forEach(enemy => enemy.gravityPhysics(ctx)); */
+  // Checks walls and floors
+}
+function drawEverything() {
   // background
   ctx.fillStyle = "white";
   ctx.fillRect(0, 0, 720, 480);
@@ -135,25 +177,19 @@ var loop = function() {
     bulletArray2.forEach(bullet2 => bullet2.left(ctx));
   }
 
-  // ------- ENEMY GRAVITY
-  /* setTimeout(function(){
-    createEnemies()
-  }, 1000)
-  enemiesArray.forEach(enemy => enemy.draw(ctx));
-  enemiesArray.forEach(enemy => enemy.moveLeft(ctx));
-  enemiesArray.forEach(enemy => enemy.gravityPhysics(ctx)); */
-  // Checks walls and floors
-  collisionDetection(enemy);
+  
+
   enemy.draw(ctx)
-  enemy.moveLeft(ctx)
-  enemy.gravityPhysics(ctx)
-  // Resets the enemy at the center
-  if (enemy.y > 480 - 32) {
-    enemy.x = 344;
-    enemy.y = 40; //Bottom of the screen
-    enemy.vy = 0; //Once you hit the wall velocity goes to 0
+
+  for (let i = 0; i < enemies.length; i++) {
+    enemies[i].draw(ctx)
   }
 
+}
+
+var loop = function() {
+  updateEverything()
+  drawEverything()  
   window.requestAnimationFrame(loop);
 };
 
@@ -167,7 +203,8 @@ function collisionDetection(element) {
   if (
     element.y > 250 - 32 &&
     element.y < 250 - 28 &&
-    (element.x > 110 - 32 && element.x < 609)
+    element.x > 110 - 32 &&
+    element.x < 609
   ) {
     if (element.jumping !== undefined) {
       element.jumping = false; //So we can jump again
