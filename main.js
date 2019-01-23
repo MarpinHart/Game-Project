@@ -11,6 +11,9 @@ var rectangle = new Player(344, 0, 32, 32);
 } */
 var playerShots = [];
 
+
+
+
 var controller = {
   //Keep track of the state of the key pressed
   left: false,
@@ -31,12 +34,32 @@ var controller = {
       case 39: //Right key
         controller.right = keyState;
         break;
-      /* case 32:
-        controller.shoot = keyState;
-        break; */
+      case 32:
+        console.log("spce was fired")
+        createBullets()
+        break;
     }
   }
 };
+
+
+// START of bullets
+
+var bulletArray = []
+var frame = 0
+
+const createBullets = () => {
+  console.log("createBullets was called")
+  
+  var getPlayerPosX = rectangle.x
+  var getPlayerPosY = rectangle.y
+  var bullet = new Bullets (canvas.width,canvas.height,getPlayerPosY,getPlayerPosX)
+  bulletArray.push(bullet)
+}
+
+
+
+// END of bullets
 
 /* var bulletsArray = []
 
@@ -176,6 +199,8 @@ var loop = function() {
   ctx.rect(410, 460, 160, 20); // Left rectangle
   ctx.rect(570, 420, 150, 60); //Right rectangle
   ctx.stroke();
+  bulletArray.forEach(bullet => bullet.draw(ctx))
+  bulletArray.forEach(bullet => bullet.update(ctx))
   window.requestAnimationFrame(loop);
 };
 
