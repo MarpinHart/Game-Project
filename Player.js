@@ -1,5 +1,5 @@
 class Player {
-  constructor(x, y, width, height){
+  constructor(x, y, width, height, color){
     this.x = x
     this.y = y
     this.width = width
@@ -7,6 +7,7 @@ class Player {
     this.xVelocity = 0
     this.yVelocity = 0
     this.jumping = true
+    this.color = color
   }
   movingPhysics() {
     this.yVelocity += 1.5; //Simulates gravity so that rectangle falls
@@ -14,9 +15,7 @@ class Player {
     this.y += this.yVelocity;
     this.xVelocity *= 0.9; //Simulates friction reducing the velocity
     this.yVelocity *= 0.9; //Let's it slow down when we take up the key
-
   }
-  
   }
 
 

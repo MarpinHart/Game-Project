@@ -1,19 +1,8 @@
 var canvas = document.querySelector("canvas");
 var ctx = canvas.getContext("2d");
 
-var rectangle = new Player(344, 0, 32, 32);
-/* var bullet = {
-  height: 2,
-  width: 2,
-  x: rectangle.x+10,
-  y: rectangle.y+10,
-  xVelocity: 0,
-} */
+var rectangle = new Player(344, 0, 32, 32,"#ff0000");
 var playerShots = [];
-
-
-
-
 var controller = {
   //Keep track of the state of the key pressed
   left: false,
@@ -35,58 +24,38 @@ var controller = {
         controller.right = keyState;
         break;
       case 32:
-        console.log("spce was fired")
-        createBullets()
+        controller.shoot = keyState
+          createBullets()
+          createBullets2()
         break;
     }
   }
 };
 
-
+var enemy = new Enemies("../images/enemy.png", 344, 0, 32, 32)
 // START of bullets
 
 var bulletArray = []
 var frame = 0
+var bulletArray2 = []
 
-const createBullets = () => {
-  console.log("createBullets was called")
-  
+const createBullets = () => {  
   var getPlayerPosX = rectangle.x
   var getPlayerPosY = rectangle.y
-  var bullet = new Bullets (canvas.width,canvas.height,getPlayerPosY,getPlayerPosX)
+  var bullet = new Bullets (canvas.width,canvas.height,getPlayerPosY,getPlayerPosX, "../images/bullet.png")
   bulletArray.push(bullet)
 }
-
+const createBullets2 = () => {  
+  var getPlayerPosX = rectangle.x
+  var getPlayerPosY = rectangle.y
+  var bullet2 = new Bullets (canvas.width,canvas.height,getPlayerPosY,getPlayerPosX, "../images/bulletLeft.png")
+  bulletArray2.push(bullet2)
+}
 
 
 // END of bullets
 
-/* var bulletsArray = []
-
-function drawBullets() {
-  bulletsArray.forEach(element => {
-    element.x -= element.xVelocity
-    ctx.rect(element.x, element.y, element.width, element.height)
-  })
-} */
-
 var loop = function() {
-  /* if(controller.shoot){
-    console.log("shoot")
-    let bullet = {
-      y: rectangle.y,
-      x: rectangle.x,
-      xVelocity: 0,
-      yVelocity:0,
-      width: 2,
-      height: 2,
-    }
-    bullet.xVelocity = 0.7
-    bullet.x += bullet.xVelocity
-    bulletsArray.push(bullet)
-    drawBullets()
-    console.log(bulletsArray)
-  } */
 
   if (controller.up && rectangle.jumping == false) {
     rectangle.yVelocity -= 38; //Send the rectangle shooting upwards
@@ -182,7 +151,7 @@ var loop = function() {
   // background
   ctx.fillStyle = "white";
   ctx.fillRect(0, 0, 720, 480);
-  ctx.fillStyle = "#ff0000";
+  ctx.fillStyle = rectangle.color;
   ctx.beginPath();
   ctx.rect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
   ctx.fill();
@@ -199,8 +168,93 @@ var loop = function() {
   ctx.rect(410, 460, 160, 20); // Left rectangle
   ctx.rect(570, 420, 150, 60); //Right rectangle
   ctx.stroke();
+  
+  if (rectangle.color == "#ff0000"){
   bulletArray.forEach(bullet => bullet.draw(ctx))
-  bulletArray.forEach(bullet => bullet.update(ctx))
+  bulletArray.forEach(bullet => bullet.right(ctx))
+  }
+  if (rectangle.color == "blue"){
+  bulletArray.forEach(bullet => bullet.draw(ctx))
+  bulletArray.forEach(bullet => bullet.right(ctx))
+  bulletArray2.forEach(bullet2 => bullet2.draw(ctx))
+  bulletArray2.forEach(bullet2 => bullet2.left(ctx)) 
+  }
+
+  // ------- ENEMY GRAVITY
+    
+  enemy.draw(ctx)
+  enemy.moveLeft(ctx)
+  enemy.gravityPhysics(ctx)
+
+  
+  
+  if (
+    enemy.y > 250 - 32 &&
+    enemy.y < 250 - 28 &&
+    (enemy.x > 110 - 32 && enemy.x < 609)
+  ) {
+    enemy.y = 250 - 32; //Bottom of the platform
+    enemy.vy = 0; //Once you hit the wall velocity goes to 0
+  }
+  // Gets on top of the bottom left corner
+  if (
+    enemy.y > 420 - 32 &&
+    enemy.y < 430 - 28 &&
+    enemy.x < 140 - 5
+  ) {
+    enemy.y = 420 - 32; //Bottom of the platform
+    enemy.vy = 0; //Once you hit the wall velocity goes to 0
+  }
+  //WALL
+  if (enemy.x < 139 && enemy.y > 420 - 32) {
+    enemy.x = 140;
+  }
+
+  if (
+    enemy.y > 460 - 32 &&
+    enemy.y < 470 - 28 &&
+    enemy.x > 140 - 32 &&
+    enemy.x < 300
+  ) {
+    enemy.y = 460 - 32; //Bottom of the platform
+    enemy.vy = 0; //Once you hit the wall velocity goes to 0
+  }
+  // Gets on top of the bottom right corner
+
+  if (
+    enemy.y > 420 - 32 &&
+    enemy.y < 430 - 28 &&
+    enemy.x > 570 - 32
+  ) {
+    enemy.y = 420 - 32; //Bottom of the platform
+    enemy.vy = 0; //Once you hit the wall velocity goes to 0
+  }
+  if (enemy.x > 567 - 32 && enemy.y > 420 - 32) {
+    enemy.x = 567 - 32;
+  }
+
+  if (
+    enemy.y > 460 - 32 &&
+    enemy.y < 470 - 28 &&
+    enemy.x > 410 - 32 &&
+    enemy.x < 570
+  ) {
+    enemy.y = 460 - 32; //Bottom of the platform
+    enemy.vy = 0; //Once you hit the wall velocity goes to 0
+  }
+  if (enemy.x < -32) {
+    //From left corner to right
+    enemy.x = 720;
+  } else if (enemy.x > 720) {
+    enemy.x = -32;
+  }
+  if (enemy.y > 480 - 32) {
+      enemy.x = 344;
+      enemy.y = 0; //Bottom of the screen
+      enemy.vy = 0; //Once you hit the wall velocity goes to 0
+  }
+
+
   window.requestAnimationFrame(loop);
 };
 
