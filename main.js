@@ -1,13 +1,19 @@
 var canvas = document.querySelector("canvas");
 var ctx = canvas.getContext("2d");
 
+//var platforms = [new Platform(0, 420, 140, 60),new Platform(140, 460, 160, 20),new Platform(410,460, 160, 20),new Platform(570, 420, 150, 60),new Platform(110, 250, 500,)]
+var frame = 0;
+var bulletArray = [];
+var bulletArray2 = [];
+var bulletArray3 = [];
+
 var rectangle = new Player(344, 0, 32, 32, "red");
 var playerShots = [];
-var frame = 0
+var frame = 0;
+var powers = ["blue", "green"];
 
-
-var enemies = []
-
+var enemies = [];
+var tookPower = false;
 var controller = {
   //Keep track of the state of the key pressed
   left: false,
@@ -21,14 +27,14 @@ var controller = {
     switch (event.keyCode) {
       case 37: //Left key
         controller.left = keyState;
-        rectangle.direction = "left"
+        rectangle.direction = "left";
         break;
       case 38: //Up key
         controller.up = keyState;
         break;
       case 39: //Right key
         controller.right = keyState;
-        rectangle.direction = "right"
+        rectangle.direction = "right";
         break;
       case 32:
         controller.shoot = keyState;
@@ -38,12 +44,7 @@ var controller = {
     }
   }
 };
-var enemy = new Enemy(344, 0, 32, 32);
-//var platforms = [new Platform(0, 420, 140, 60),new Platform(140, 460, 160, 20),new Platform(410,460, 160, 20),new Platform(570, 420, 150, 60),new Platform(110, 250, 500,)]
-var bulletArray = [];
-var frame = 0;
-var bulletArray2 = [];
-var bulletArray3 = [];
+
 
 const createBullets = () => {
   var getPlayerPosX = rectangle.x;
@@ -67,32 +68,35 @@ const createBullets = () => {
     canvas.height,
     getPlayerPosY,
     getPlayerPosX,
-    "images/burst.png"
+    "images/bullet.png"
   );
-  if (rectangle.direction === "left" && rectangle.color ==="green")
-    bulletArray3.push(bullet3)
-  if(rectangle.direction == "left" || rectangle.color === "blue")
+  if (rectangle.color === "green") bulletArray3.push(bullet3);
+  if (rectangle.direction == "left" || rectangle.color === "blue")
     bulletArray2.push(bullet2);
-  if (rectangle.direction =="right" || rectangle.color === "blue")
+  if (rectangle.direction == "right" || rectangle.color === "blue")
     bulletArray.push(bullet);
 };
 
-
+var power = new Power();
 
 // END of bullets
 
 function updateEverything() {
-  frame++
-  
+  frame++;
+  if(frame > 800)
+  powerUp(power, rectangle);
 
-  
-  removeBulletFromScreen()
+  takeDamage(enemies, rectangle);
 
-  removeEnemey(enemies, bulletArray)
+  removeBulletFromScreen();
 
-  removeEnemey(enemies, bulletArray2)
+  removeEnemey(enemies, bulletArray);
 
-  
+  removeEnemey(enemies, bulletArray2);
+
+  removeEnemey(enemies, bulletArray3);
+
+  //rectangle.checkLife(ctx)
 
   // PLAYER MOVEMENT
 
@@ -110,45 +114,34 @@ function updateEverything() {
   // Gives friction and gravity
   rectangle.movingPhysics();
 
-  // Resets PLAYER if drops into the pit
-  /* if (rectangle.y > 480 - 32) {
-    setTimeout(function() {
-      rectangle.jumping = false; //So we can jump again
-      rectangle.x = 344;
-      rectangle.y = 0; //Bottom of the screen
-      rectangle.yVelocity = 0; //Once you hit the wall velocity goes to 0
-    }, 500);
-  } */
-
   // Creation of potentiel new enemy based of enemies data
-  var newEnemyData = enemiesData.find((enemyData) => enemyData.frameApparation === frame)
+  var newEnemyData = enemiesData.find(
+    enemyData => enemyData.frameApparation === frame
+  );
   if (newEnemyData) {
-    enemies.push(new Enemy(newEnemyData.x, newEnemyData.y, 32, 32, newEnemyData.direction))
+    enemies.push(
+      new Enemy(newEnemyData.x, newEnemyData.y, 32, 32, newEnemyData.direction)
+    );
   }
   for (let i = 0; i < enemies.length; i++) {
-    enemies[i].move()
-    enemies[i].gravityPhysics()
+    enemies[i].move();
+    enemies[i].gravityPhysics();
     collisionDetection(enemies[i]);
   }
 
-
-  enemy.move()
-  enemy.gravityPhysics()
+  //CREATION OF POWERP
 
   collisionDetection(rectangle);
-  /* collisionDetection(enemy); */
 
-    
-
-
-
+  power.gravityPhysics();
+  collisionDetection(power);
 }
 function drawEverything() {
   // background
   ctx.fillStyle = "white";
   ctx.fillRect(0, 0, 720, 480);
 
-  rectangle.draw(ctx)
+  rectangle.draw(ctx);
 
   ctx.strokeStyle = "#202830";
   ctx.lineWidth = 4;
@@ -156,14 +149,18 @@ function drawEverything() {
   //TOP FLOOR
   ctx.rect(110, 250, 500, 0);
   // BOTTOM LEFT CORNER
-  ctx.rect(0, 420, 140, 60); //Left rectangle
-  ctx.rect(140, 460, 160, 20); //Right rectangle
+  ctx.rect(-5, 420, 145, 65); //Left rectangle
+  ctx.rect(140, 460, 160, 25); //Right rectangle
   // BOTTOM RIGHT CORNER
-  ctx.rect(410, 460, 160, 20); // Left rectangle
-  ctx.rect(570, 420, 150, 60); //Right rectangle
+  ctx.rect(410, 460, 160, 25); // Left rectangle
+  ctx.rect(570, 420, 155, 65); //Right rectangle
   ctx.stroke();
   //CIRCLE
-
+  ctx.font = "30px arial";
+  ctx.textAlign = "left";
+  ctx.fillText("HEALTH: " + rectangle.life, 25, 50);
+  ctx.textAlign = "right";
+  ctx.fillText("KILLS: " + rectangle.points, 670, 50);
   //SHOOTING MECHANICS ACCORDING TO CLASS
   if (rectangle.color == "red") {
     bulletArray.forEach(bullet => bullet.draw(ctx));
@@ -177,39 +174,49 @@ function drawEverything() {
     bulletArray2.forEach(bullet2 => bullet2.draw(ctx));
     bulletArray2.forEach(bullet2 => bullet2.left(ctx));
   }
-  if (rectangle.color == "green")
+  if (rectangle.color == "green") {
     bulletArray3.forEach(bullet3 => bullet3.draw(ctx));
-    bulletArray3.forEach(bullet3 => bullet3.left(ctx));
-    
-
-  
-
-  enemy.draw(ctx)
-// DRAWS AND GIVES PHYSICS TO ENEMY
+    bulletArray3.forEach(bullet3 => bullet3.bottom(ctx));
+  }
+  if (frame > 800){
+  if (!tookPower) {
+    power.draw(ctx);
+  }
+  }
+  // DRAWS AND GIVES PHYSICS TO ENEMY
   for (let i = 0; i < enemies.length; i++) {
-    enemies[i].draw(ctx)
+    enemies[i].draw(ctx);
   }
 
+  /* ctx.fillText("Score"+player.points, 1, 1, 100) */
 }
 
 var loop = function() {
-  updateEverything()
-  drawEverything()  
+  updateEverything();
+  drawEverything();
   window.requestAnimationFrame(loop);
 };
 
+/* var menuLoop = function() {
+  ctx.fillStyle = "white"
+  ctx.fillRect(0, 0, 720, 640)
 
+  
+  
 
+  window.requestAnimationFrame(menuLoop);
+}; */
 
 window.addEventListener("keydown", controller.keyListener);
 window.addEventListener("keyup", controller.keyListener);
+/* window.requestAnimationFrame(menuLoop); */
 window.requestAnimationFrame(loop);
 
 // COLLISION DETECTION FUNCTION
 function collisionDetection(element) {
   if (
     element.y > 250 - 32 &&
-    element.y < 250 -28 &&
+    element.y < 250 - 28 &&
     element.x > 110 - 32 &&
     element.x < 609
   ) {
@@ -267,7 +274,7 @@ function collisionDetection(element) {
     element.y = 460 - 32; //Bottom of the platform
     element.yVelocity = 0; //Once you hit the wall velocity goes to 0
   }
-//From left corner to right
+  //From left corner to right
   if (element.x < -32) {
     element.x = 720;
   } else if (element.x > 720) {
@@ -280,50 +287,84 @@ function collisionDetection(element) {
   }
 }
 
-
-function removeEnemey(enem,bull){
-  console.log(bull)
-  if (enem.length && bull.length){
-    for(var ene = 0; ene<enem.length;ene++){
-    for(var bul = 0; bul<bull.length;bul++){ 
-      if (hitCheck(bull[bul], enem[ene])) {
-        enem.pop(enem[ene])
-        bull.pop(bull[bul])
-        points++        
+function removeEnemey(enem, bull) {
+  if (enem.length && bull.length) {
+    for (var ene = 0; ene < enem.length; ene++) {
+      for (var bul = 0; bul < bull.length; bul++) {
+        if (hitCheck(bull[bul], enem[ene])) {
+          enem.splice(ene, 1);
+          bull.splice(bul, 1);
+          rectangle.points++;
+          console.log("kill");
+          return;
         }
       }
     }
-   }
   }
+}
 
+function powerUp(power, player) {
+  if (hitCheck(power, player) && !tookPower) {
+    tookPower = true;
+    player.color = powers[Math.floor(Math.random() * 2)];
+  }
+}
 
+function takeDamage(enem, player) {
+  if (enem.length) {
+    for (var ene = 0; ene < enem.length; ene++) {
+      if (hitCheck(enem[ene], player)) {
+        rectangle.life--;
+        rectangle.xVelocity*=0.5
+        
 
-
+        console.log(rectangle.life);
+      }
+    }
+  }
+}
 
 // collision test
 function hitCheck(box1, box2) {
-  var box1Right = box1.x /* + box1.width */
-  var box1Bottom = box1.y /* + box1.height */  
-  var box2Right = box2.x + box2.width 
-  var box2Bottom = box2.y  + box2.height  
-  
-  if(box1Right > box2.x && box2Right > box1.x && 
-    box1Bottom > box2.y && box2Bottom > box1.y) return true;
-  else return false
+  var box1Right = box1.x + box1.width;
+  var box1Bottom = box1.y + box1.height;
+  var box2Right = box2.x + box2.width;
+  var box2Bottom = box2.y + box2.height;
+
+  if (
+    box1Right > box2.x &&
+    box2Right > box1.x &&
+    box1Bottom > box2.y &&
+    box2Bottom > box1.y
+  )
+    return true;
+  else return false;
 }
 
-
-
-function removeBulletFromScreen(){
-  if (bulletArray.length){
-    if (bulletArray[0].x>720){
-      bulletArray.shift()
+function removeBulletFromScreen() {
+  if (bulletArray.length) {
+    if (bulletArray[0].x > 720) {
+      bulletArray.shift();
     }
   }
-  if (bulletArray2.length){
-    if (bulletArray2[0].x<0){
-      bulletArray2.shift()
-    } 
+  if (bulletArray2.length) {
+    if (bulletArray2[0].x < 0) {
+      bulletArray2.shift();
+    }
+  }
+  if (bulletArray3.length) {
+    if (bulletArray3[0].y > 480) {
+      bulletArray3.shift();
+    }
+  }
+}
 
-  }
-  }
+// Resets PLAYER if drops into the pit
+/* if (rectangle.y > 480 - 32) {
+    setTimeout(function() {
+      rectangle.jumping = false; //So we can jump again
+      rectangle.x = 344;
+      rectangle.y = 0; //Bottom of the screen
+      rectangle.yVelocity = 0; //Once you hit the wall velocity goes to 0
+    }, 500);
+  } */

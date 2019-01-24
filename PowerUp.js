@@ -1,6 +1,6 @@
 class Power {
   constructor(){
-    this.x = Math.floor(Math.random()*610)+110;
+    this.x = Math.floor(Math.random()*450)+110;
     this.y = 40
     this.img = new Image()
     this.img.src = "images/powerup.png"
@@ -10,6 +10,7 @@ class Power {
     this.right = function(){return (this.x + this.width)}
     this.top = function () {return this.y}
     this.bottom = function() {return (this.y + this.height)}
+    this.yVelocity = 0
 }
 gravityPhysics() {
   this.yVelocity += 1.5; //Simulates gravity so that rectangle fallss
@@ -19,10 +20,9 @@ gravityPhysics() {
 draw(ctx){
   ctx.drawImage(this.img,this.x,this.y,this.width,this.height)
 }
-checkCollusion(player){
-  if(this.x ){}
+checkCollusion(){
 }
-powerUp(player){
-  
-}
+/* powerUp(player){
+  if(hitCheck(this, player)) player.color = ""
+} */
 }

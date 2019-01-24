@@ -9,9 +9,7 @@ class Bullets {
     this.canvasWidth = canvasWidth
     this.canvasHeight = canvasHeight
     this.vx = -8
-    /* this.radius = 10
-    this.startAngle = 0
-    this.endAngle = Math.PI*2; */
+    this.vy = -8
   }
   draw(ctx){
     ctx.drawImage(this.img,this.x,this.y,this.width,this.height)
@@ -27,11 +25,8 @@ class Bullets {
   both() {
     this.x -= this.vx
   }
-  top() {
-    return this.y;
-  }
   bottom() {
-    return this.y + this.height;
+    this.y -= this.vy;
   }
 
 }
