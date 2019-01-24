@@ -83,6 +83,16 @@ const createBullets = () => {
 
 function updateEverything() {
   frame++
+  
+
+  
+  removeBulletFromScreen()
+
+  removeEnemey(enemies, bulletArray)
+
+  removeEnemey(enemies, bulletArray2)
+
+  
 
   // PLAYER MOVEMENT
 
@@ -126,7 +136,11 @@ function updateEverything() {
   enemy.gravityPhysics()
 
   collisionDetection(rectangle);
-  collisionDetection(enemy);
+  /* collisionDetection(enemy); */
+
+    
+
+
 
 }
 function drawEverything() {
@@ -183,6 +197,8 @@ var loop = function() {
   drawEverything()  
   window.requestAnimationFrame(loop);
 };
+
+
 
 
 window.addEventListener("keydown", controller.keyListener);
@@ -263,3 +279,51 @@ function collisionDetection(element) {
     element.yVelocity = 0; //Once you hit the wall velocity goes to 0
   }
 }
+
+
+function removeEnemey(enem,bull){
+  console.log(bull)
+  if (enem.length && bull.length){
+    for(var ene = 0; ene<enem.length;ene++){
+    for(var bul = 0; bul<bull.length;bul++){ 
+      if (hitCheck(bull[bul], enem[ene])) {
+        enem.pop(enem[ene])
+        bull.pop(bull[bul])
+        points++        
+        }
+      }
+    }
+   }
+  }
+
+
+
+
+
+// collision test
+function hitCheck(box1, box2) {
+  var box1Right = box1.x /* + box1.width */
+  var box1Bottom = box1.y /* + box1.height */  
+  var box2Right = box2.x + box2.width 
+  var box2Bottom = box2.y  + box2.height  
+  
+  if(box1Right > box2.x && box2Right > box1.x && 
+    box1Bottom > box2.y && box2Bottom > box1.y) return true;
+  else return false
+}
+
+
+
+function removeBulletFromScreen(){
+  if (bulletArray.length){
+    if (bulletArray[0].x>720){
+      bulletArray.shift()
+    }
+  }
+  if (bulletArray2.length){
+    if (bulletArray2[0].x<0){
+      bulletArray2.shift()
+    } 
+
+  }
+  }

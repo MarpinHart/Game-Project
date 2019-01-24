@@ -10,6 +10,7 @@ class Player {
     this.color = color
     this.direction = "right"
     this.life = 3
+    this.points = 0
   }
   movingPhysics() {
     this.formerX = this.x
