@@ -2,16 +2,21 @@ class Bullets {
   constructor (canvasWidth,canvasHeight,getPlayerPosY,getPlayerPosX, src){
     this.img = new Image()
     this.img.src = src
-    this.width = 20
-    this.height = 30
-    this.y = getPlayerPosY +2
-    this.x = getPlayerPosX +2
+    this.width = 10
+    this.height = 10
+    this.y = getPlayerPosY +11
+    this.x = getPlayerPosX +11
     this.canvasWidth = canvasWidth
     this.canvasHeight = canvasHeight
     this.vx = -8
+    /* this.radius = 10
+    this.startAngle = 0
+    this.endAngle = Math.PI*2; */
   }
   draw(ctx){
-    ctx.drawImage(this.img,this.x,this.y,this.width,this.height)    
+    ctx.drawImage(this.img,this.x,this.y,this.width,this.height)
+    /* ctx.arc(this.x, this.y, this.radius, this.startAngle, this.endAngle, true)
+    ctc */
   }
   right(){
     this.x -= this.vx
@@ -28,6 +33,5 @@ class Bullets {
   bottom() {
     return this.y + this.height;
   }
-
 
 }

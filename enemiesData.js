@@ -1,5 +1,20 @@
 // 60 frames is about 1 second
 var enemiesData = [
-  { frameApparation: 100, x: 200, y: -50, direction: "right" },
-  { frameApparation: 200, x: 600, y: -50, direction: "left" },
+  { frameApparation: 60, x: 200, y: 40, direction: "right" },
+  { frameApparation: 90, x: 600, y: 40, direction: "left" },
+  { frameApparation: 120, x: 450, y: 40, direction: "left" },
+  { frameApparation: 150, x: 550, y: 40, direction: "right" },
+  { frameApparation: 270, x: 450, y: 40, direction: "right" },
+  { frameApparation: 220, x: 300, y: 40, direction: "right" },
+  { frameApparation: 270, x: 350, y: 40, direction: "right" },
+  { frameApparation: 480, x: 350, y: 40, direction: "right" },
+  { frameApparation: 150, x: 370, y: 40, direction: "right" },
+  { frameApparation: 150, x: 300, y: 40, direction: "right" },
+  { frameApparation: 170, x: 200, y: 40, direction: "left" },
+  { frameApparation: 170, x: 180, y: 40, direction: "left" },
+  { frameApparation: 500, x: 600, y: 40, direction: "left" },
+  { frameApparation: 500, x: 420, y: 40, direction: "left" },
+  { frameApparation: 150, x: 600, y: 40, direction: "left" },
+  { frameApparation: 150, x: 540, y: 40, direction: "left" },
+  { frameApparation: 150, x: 600, y: 40, direction: "left" },
 ];

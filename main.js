@@ -1,7 +1,7 @@
 var canvas = document.querySelector("canvas");
 var ctx = canvas.getContext("2d");
 
-var rectangle = new Player(344, 0, 32, 32, "#ff0000"/* "#ff0000" */);
+var rectangle = new Player(344, 0, 32, 32, "red");
 var playerShots = [];
 var frame = 0
 
@@ -39,14 +39,11 @@ var controller = {
   }
 };
 var enemy = new Enemy(344, 0, 32, 32);
-/* var enemiesArray = []
-const createEnemies = () => {
-  enemiesArray.push(enemy)
-} */
-// START of bullets
+//var platforms = [new Platform(0, 420, 140, 60),new Platform(140, 460, 160, 20),new Platform(410,460, 160, 20),new Platform(570, 420, 150, 60),new Platform(110, 250, 500,)]
 var bulletArray = [];
 var frame = 0;
 var bulletArray2 = [];
+var bulletArray3 = [];
 
 const createBullets = () => {
   var getPlayerPosX = rectangle.x;
@@ -63,8 +60,17 @@ const createBullets = () => {
     canvas.height,
     getPlayerPosY,
     getPlayerPosX,
-    "images/bulletLeft.png"
+    "images/bullet.png"
   );
+  var bullet3 = new Bullets(
+    canvas.width,
+    canvas.height,
+    getPlayerPosY,
+    getPlayerPosX,
+    "images/burst.png"
+  );
+  if (rectangle.direction === "left" && rectangle.color ==="green")
+    bulletArray3.push(bullet3)
   if(rectangle.direction == "left" || rectangle.color === "blue")
     bulletArray2.push(bullet2);
   if (rectangle.direction =="right" || rectangle.color === "blue")
@@ -95,14 +101,14 @@ function updateEverything() {
   rectangle.movingPhysics();
 
   // Resets PLAYER if drops into the pit
-  if (rectangle.y > 480 - 32) {
+  /* if (rectangle.y > 480 - 32) {
     setTimeout(function() {
       rectangle.jumping = false; //So we can jump again
       rectangle.x = 344;
       rectangle.y = 0; //Bottom of the screen
       rectangle.yVelocity = 0; //Once you hit the wall velocity goes to 0
     }, 500);
-  }
+  } */
 
   // Creation of potentiel new enemy based of enemies data
   var newEnemyData = enemiesData.find((enemyData) => enemyData.frameApparation === frame)
@@ -122,26 +128,6 @@ function updateEverything() {
   collisionDetection(rectangle);
   collisionDetection(enemy);
 
-
-  // Resets the enemy at the center
-  if (enemy.y > 480 - 32) {
-    enemy.x = 344;
-    enemy.y = 40; //Bottom of the screen
-    enemy.vy = 0; //Once you hit the wall velocity goes to 0
-  }
-
-  
-
-
-
-  // ------- ENEMY GRAVITY
-  /* setTimeout(function(){
-    createEnemies()
-  }, 1000)
-  enemiesArray.forEach(enemy => enemy.draw(ctx));
-  enemiesArray.forEach(enemy => enemy.move(ctx));
-  enemiesArray.forEach(enemy => enemy.gravityPhysics(ctx)); */
-  // Checks walls and floors
 }
 function drawEverything() {
   // background
@@ -162,9 +148,10 @@ function drawEverything() {
   ctx.rect(410, 460, 160, 20); // Left rectangle
   ctx.rect(570, 420, 150, 60); //Right rectangle
   ctx.stroke();
+  //CIRCLE
 
   //SHOOTING MECHANICS ACCORDING TO CLASS
-  if (rectangle.color == "#ff0000") {
+  if (rectangle.color == "red") {
     bulletArray.forEach(bullet => bullet.draw(ctx));
     bulletArray.forEach(bullet => bullet.right(ctx));
     bulletArray2.forEach(bullet2 => bullet2.draw(ctx));
@@ -176,11 +163,15 @@ function drawEverything() {
     bulletArray2.forEach(bullet2 => bullet2.draw(ctx));
     bulletArray2.forEach(bullet2 => bullet2.left(ctx));
   }
+  if (rectangle.color == "green")
+    bulletArray3.forEach(bullet3 => bullet3.draw(ctx));
+    bulletArray3.forEach(bullet3 => bullet3.left(ctx));
+    
 
   
 
   enemy.draw(ctx)
-
+// DRAWS AND GIVES PHYSICS TO ENEMY
   for (let i = 0; i < enemies.length; i++) {
     enemies[i].draw(ctx)
   }
@@ -202,7 +193,7 @@ window.requestAnimationFrame(loop);
 function collisionDetection(element) {
   if (
     element.y > 250 - 32 &&
-    element.y < 250 - 28 &&
+    element.y < 250 -28 &&
     element.x > 110 - 32 &&
     element.x < 609
   ) {
@@ -265,5 +256,10 @@ function collisionDetection(element) {
     element.x = 720;
   } else if (element.x > 720) {
     element.x = -32;
+  }
+  if (element.y > 480 - 32) {
+    element.x = 344;
+    element.y = 40; //Bottom of the screen
+    element.yVelocity = 0; //Once you hit the wall velocity goes to 0
   }
 }
