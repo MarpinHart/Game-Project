@@ -92,8 +92,11 @@ function updateEverything() {
   removeEnemey(enemies, bulletArray2);
 
   removeEnemey(enemies, bulletArray3);
+  console.log("ctx", ctx)
+  rectangle.checkLife(loop)
 
-  
+
+
 
   // PLAYER MOVEMENT
 
@@ -199,9 +202,13 @@ var loop = function() {
   ctx.fillStyle = "black"
   ctx.font = "29px arial"
   ctx.fillText("PRESS SPACE TO SHOOT AND ARROWS TO JUMP AND MOVE", 10, 250)
+  canvas.addEventListener('click', function(event) {
+    loop()})
+
   window.requestAnimationFrame(menuLoop);
 };
  */
+
 window.addEventListener("keydown", controller.keyListener);
 window.addEventListener("keyup", controller.keyListener);
 //window.requestAnimationFrame(menuLoop);
