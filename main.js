@@ -189,23 +189,23 @@ function drawEverything() {
   }
 }
 
-/* var loop = function() {
+var loop = function() {
   updateEverything();
   drawEverything();
   window.requestAnimationFrame(loop);
-}; */
+};
 
-var menuLoop = function() {
+/* var menuLoop = function() {
   ctx.fillStyle = "black"
   ctx.font = "29px arial"
   ctx.fillText("PRESS SPACE TO SHOOT AND ARROWS TO JUMP AND MOVE", 10, 250)
   window.requestAnimationFrame(menuLoop);
 };
-
+ */
 window.addEventListener("keydown", controller.keyListener);
 window.addEventListener("keyup", controller.keyListener);
-window.requestAnimationFrame(menuLoop);
-//window.requestAnimationFrame(loop);
+//window.requestAnimationFrame(menuLoop);
+window.requestAnimationFrame(loop);
 
 // COLLISION DETECTION FUNCTION
 function collisionDetection(element) {

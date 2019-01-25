@@ -11,6 +11,9 @@ class Bullets {
     this.vx = -8
     this.vy = -8
   }
+
+
+  //hello from debugging
   draw(ctx){
     ctx.drawImage(this.img,this.x,this.y,this.width,this.height)
     /* ctx.arc(this.x, this.y, this.radius, this.startAngle, this.endAngle, true)
