@@ -51,21 +51,21 @@ const createBullets = () => {
     canvas.height,
     getPlayerPosY,
     getPlayerPosX,
-    "/images/bullet.png"
+    "images/bullets.png"
   );
   var bullet2 = new Bullets(
     canvas.width,
     canvas.height,
     getPlayerPosY,
     getPlayerPosX,
-    "/images/bullet.png"
+    "images/bullets.png"
   );
   var bullet3 = new Bullets(
     canvas.width,
     canvas.height,
     getPlayerPosY,
     getPlayerPosX,
-    "/images/bullet.png"
+    "images/bullets.png"
   );
   if (rectangle.color === "green") bulletArray3.push(bullet3);
   if (rectangle.direction == "left" || rectangle.color === "blue")
