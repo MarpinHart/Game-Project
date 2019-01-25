@@ -1,7 +1,5 @@
 var canvas = document.querySelector("canvas");
 var ctx = canvas.getContext("2d");
-
-//var platforms = [new Platform(0, 420, 140, 60),new Platform(140, 460, 160, 20),new Platform(410,460, 160, 20),new Platform(570, 420, 150, 60),new Platform(110, 250, 500,)]
 var frame = 0;
 var bulletArray = [];
 var bulletArray2 = [];
@@ -39,7 +37,6 @@ var controller = {
       case 32:
         controller.shoot = keyState;
         createBullets();
-        // createBullets2();
         break;
     }
   }
@@ -54,21 +51,21 @@ const createBullets = () => {
     canvas.height,
     getPlayerPosY,
     getPlayerPosX,
-    "images/bullet.png"
+    "/images/bullet.png"
   );
   var bullet2 = new Bullets(
     canvas.width,
     canvas.height,
     getPlayerPosY,
     getPlayerPosX,
-    "images/bullet.png"
+    "/images/bullet.png"
   );
   var bullet3 = new Bullets(
     canvas.width,
     canvas.height,
     getPlayerPosY,
     getPlayerPosX,
-    "images/bullet.png"
+    "/images/bullet.png"
   );
   if (rectangle.color === "green") bulletArray3.push(bullet3);
   if (rectangle.direction == "left" || rectangle.color === "blue")
@@ -96,7 +93,7 @@ function updateEverything() {
 
   removeEnemey(enemies, bulletArray3);
 
-  //rectangle.checkLife(ctx)
+  
 
   // PLAYER MOVEMENT
 
@@ -142,6 +139,9 @@ function drawEverything() {
   ctx.fillRect(0, 0, 720, 480);
 
   rectangle.draw(ctx);
+  if (rectangle.life < 0){
+  
+    }
 
   ctx.strokeStyle = "#202830";
   ctx.lineWidth = 4;
@@ -161,7 +161,7 @@ function drawEverything() {
   ctx.fillText("HEALTH: " + rectangle.life, 25, 50);
   ctx.textAlign = "right";
   ctx.fillText("KILLS: " + rectangle.points, 670, 50);
-  //SHOOTING MECHANICS ACCORDING TO CLASS
+  //SHOOTING MECHANICS ACCORDING TO CLASS AND DIRECTION
   if (rectangle.color == "red") {
     bulletArray.forEach(bullet => bullet.draw(ctx));
     bulletArray.forEach(bullet => bullet.right(ctx));
@@ -187,30 +187,25 @@ function drawEverything() {
   for (let i = 0; i < enemies.length; i++) {
     enemies[i].draw(ctx);
   }
-
-  /* ctx.fillText("Score"+player.points, 1, 1, 100) */
 }
 
-var loop = function() {
+/* var loop = function() {
   updateEverything();
   drawEverything();
   window.requestAnimationFrame(loop);
-};
-
-/* var menuLoop = function() {
-  ctx.fillStyle = "white"
-  ctx.fillRect(0, 0, 720, 640)
-
-  
-  
-
-  window.requestAnimationFrame(menuLoop);
 }; */
+
+var menuLoop = function() {
+  ctx.fillStyle = "black"
+  ctx.font = "29px arial"
+  ctx.fillText("PRESS SPACE TO SHOOT AND ARROWS TO JUMP AND MOVE", 10, 250)
+  window.requestAnimationFrame(menuLoop);
+};
 
 window.addEventListener("keydown", controller.keyListener);
 window.addEventListener("keyup", controller.keyListener);
-/* window.requestAnimationFrame(menuLoop); */
-window.requestAnimationFrame(loop);
+window.requestAnimationFrame(menuLoop);
+//window.requestAnimationFrame(loop);
 
 // COLLISION DETECTION FUNCTION
 function collisionDetection(element) {
@@ -316,8 +311,6 @@ function takeDamage(enem, player) {
       if (hitCheck(enem[ene], player)) {
         rectangle.life--;
         rectangle.xVelocity*=0.5
-        
-
         console.log(rectangle.life);
       }
     }
@@ -359,12 +352,3 @@ function removeBulletFromScreen() {
   }
 }
 
-// Resets PLAYER if drops into the pit
-/* if (rectangle.y > 480 - 32) {
-    setTimeout(function() {
-      rectangle.jumping = false; //So we can jump again
-      rectangle.x = 344;
-      rectangle.y = 0; //Bottom of the screen
-      rectangle.yVelocity = 0; //Once you hit the wall velocity goes to 0
-    }, 500);
-  } */

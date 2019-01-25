@@ -25,14 +25,4 @@ class Player {
     ctx.fillStyle = this.color;
     ctx.fillRect(this.x, this.y, this.width, this.height);
   }
-  checkLife(){
-    if (this.life < 0){
-    ctx.fillStyle = "red"
-    ctx.font = "50px arial"
-    ctx.fillText("GAME OVER")
-    console.log("ciao")
-    document.location.reload();
-    clearInterval(interval);
-    }
-  }
 }

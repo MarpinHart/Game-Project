@@ -22,7 +22,4 @@ draw(ctx){
 }
 checkCollusion(){
 }
-/* powerUp(player){
-  if(hitCheck(this, player)) player.color = ""
-} */
 }
