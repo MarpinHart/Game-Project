@@ -25,9 +25,11 @@ class Player {
     ctx.fillStyle = this.color;
     ctx.fillRect(this.x, this.y, this.width, this.height);
   }
-  checkLife(loop){
+  /* checkLife(loop){
     if(this.life < 0)
     alert("GAME OVER")
+    ctx.fillRect(0,0, 100, 100)
+    ctx.fillText("GAME OVER", 100, 100)
     clearInterval(loop)
-  }
+  }  */
 }

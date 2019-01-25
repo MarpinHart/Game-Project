@@ -93,7 +93,7 @@ function updateEverything() {
 
   removeEnemey(enemies, bulletArray3);
   console.log("ctx", ctx)
-  rectangle.checkLife(loop)
+  //rectangle.checkLife(loop)
 
 
 
@@ -203,8 +203,8 @@ var loop = function() {
   ctx.font = "29px arial"
   ctx.fillText("PRESS SPACE TO SHOOT AND ARROWS TO JUMP AND MOVE", 10, 250)
   canvas.addEventListener('click', function(event) {
-    loop()})
-
+    loop()}
+    
   window.requestAnimationFrame(menuLoop);
 };
  */
