@@ -92,8 +92,8 @@ function updateEverything() {
   removeEnemey(enemies, bulletArray2);
 
   removeEnemey(enemies, bulletArray3);
-  console.log("ctx", ctx)
-  //rectangle.checkLife(loop)
+  
+  rectangle.checkLife(loop)
 
 
 
@@ -142,7 +142,12 @@ function drawEverything() {
   ctx.fillRect(0, 0, 720, 480);
 
   rectangle.draw(ctx);
-  if (rectangle.life < 0){
+  if (rectangle.life <= 0){
+
+      ctx.fillStyle =  "black"
+      ctx.textAlign = "left";
+      ctx.font = "40px arial"
+      ctx.fillText(`GAME OVER! YOUR SCORE IS ${rectangle.points}`, 60, 240)
   
     }
 
@@ -164,6 +169,9 @@ function drawEverything() {
   ctx.fillText("HEALTH: " + rectangle.life, 25, 50);
   ctx.textAlign = "right";
   ctx.fillText("KILLS: " + rectangle.points, 670, 50);
+
+
+  
   //SHOOTING MECHANICS ACCORDING TO CLASS AND DIRECTION
   if (rectangle.color == "red") {
     bulletArray.forEach(bullet => bullet.draw(ctx));
@@ -195,24 +203,25 @@ function drawEverything() {
 var loop = function() {
   updateEverything();
   drawEverything();
-  window.requestAnimationFrame(loop);
 };
 
-/* var menuLoop = function() {
+var menuLoop = function() {
   ctx.fillStyle = "black"
   ctx.font = "29px arial"
   ctx.fillText("PRESS SPACE TO SHOOT AND ARROWS TO JUMP AND MOVE", 10, 250)
   canvas.addEventListener('click', function(event) {
-    loop()}
+    window.cancelAnimationFrame(menuLoop);
+    window.requestAnimationFrame(loop);
+
     
-  window.requestAnimationFrame(menuLoop);
+    })
 };
- */
+
 
 window.addEventListener("keydown", controller.keyListener);
 window.addEventListener("keyup", controller.keyListener);
-//window.requestAnimationFrame(menuLoop);
-window.requestAnimationFrame(loop);
+window.requestAnimationFrame(menuLoop);
+
 
 // COLLISION DETECTION FUNCTION
 function collisionDetection(element) {

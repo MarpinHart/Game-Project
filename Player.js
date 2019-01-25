@@ -11,6 +11,7 @@ class Player {
     this.direction = "right"
     this.life = 100
     this.points = 0
+    
   }
   movingPhysics() {
     this.formerX = this.x
@@ -26,10 +27,18 @@ class Player {
     ctx.fillRect(this.x, this.y, this.width, this.height);
   }
   checkLife(loop){
-    if(this.life < 0)
-    alert("GAME OVER")
-    /* ctx.fillRect(0,0, 100, 100)
-    ctx.fillText("GAME OVER", 100, 100) */
-    clearInterval(loop)
-  } 
-}
+    
+    if(this.life <= 0){
+      this.life=0
+      this.xVelocity = 0
+      this.yVelocity = 0
+      enemies=[]
+    }
+    window.requestAnimationFrame(loop);
+    }
+    
+  }
+
+
+
+
