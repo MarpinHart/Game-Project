@@ -283,7 +283,7 @@ function collisionDetection(element) {
     element.x = -32;
   }
   if (element.y > 480 - 32) {
-    element.x = 344;
+    element.x =  Math.floor(Math.random()*450)+110;
     element.y = 40; //Bottom of the screen
     element.yVelocity = 0; //Once you hit the wall velocity goes to 0
   }
